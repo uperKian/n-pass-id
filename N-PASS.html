@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identiteitskaart Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input {
+            display: block;
+            margin: 10px auto;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .id-card {
+            width: 300px;
+            height: 180px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ddd;
+        }
+
+        .card-type {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Vul je gegevens in</h2>
+        <label>Naam:</label>
+        <input type="text" id="nameInput" placeholder="Voer je naam in">
+        
+        <label>Profielfoto uploaden:</label>
+        <input type="file" id="photoInput" accept="image/*">
+        
+        <button onclick="updateCard()">Maak kaart</button>
+        <button onclick="downloadCard()">Download als afbeelding</button>
+    </div>
+
+    <div class="id-card" id="idCard">
+        <img src="" id="profilePic" alt="Profielfoto" class="profile-pic">
+        <h2 id="cardName">Naam: -</h2>
+        <p class="card-type">N-PASS gebruiker</p>
+    </div>
+
+    <script>
+        function updateCard() {
+            let name = document.getElementById("nameInput").value;
+            let file = document.getElementById("photoInput").files[0];
+
+            document.getElementById("cardName").textContent = "Naam: " + (name || "-");
+
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById("profilePic").src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function downloadCard() {
+            html2canvas(document.getElementById("idCard")).then(canvas => {
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "identiteitskaart.png";
+                link.click();
+            });
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</body>
+</html>
